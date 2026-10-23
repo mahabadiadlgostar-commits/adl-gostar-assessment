@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سامانه هوشمند عارضه‌یابی | عدل‌گستر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-color:#0c3866;
+--primary-hover:#134e8c;
+--accent-color:#c59b27;
+--secondary-color:#c62828;
+--warning-color:#e65100;
+--success-color:#2e7d32;
+--bg-color:#f0f4f8;
+--text-main:#1a2530;
+--text-muted:#5a6e7f;
+--border-color:#d1dbe5;
+--radius:14px;
+--shadow:0 12px 30px rgba(12,56,102,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn','Segoe UI',Tahoma,sans-serif}
+body{background:var(--bg-color);color:var(--text-main);line-height:1.7;padding:25px 12px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.container{width:100%;max-width:820px;background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(12,56,102,.08)}
+.header{background:linear-gradient(135deg,#0c3866,#104882);color:white;padding:28px 20px;text-align:center}
+.logo-img{max-width:170px;height:auto;margin-bottom:12px}
+.header h1{font-size:1.35rem;font-weight:800;margin-bottom:6px}
+.header p{font-size:.9rem;opacity:.92}
+.progress-container{width:100%;background:#e2e8f0;height:6px}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent-color),#e5b839);width:25%;transition:width .4s}
+.step-content{padding:32px 28px;display:none}
+.step-content.active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:24px 0}
+.feature-card{background:#f8fafc;padding:16px 18px;border-radius:10px;border-right:4px solid var(--primary-color);font-size:.9rem;border:1px solid #edf2f7}
+.stats-bar{display:flex;justify-content:space-around;background:#edf4fa;padding:18px;border-radius:10px;margin:24px 0;text-align:center;border:1px dashed #b8cea1}
+.stat-item strong{display:block;color:var(--primary-color);font-size:1.25rem;font-weight:800}
+.stat-item span{font-size:.85rem;color:var(--text-muted)}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;font-weight:700;font-size:.95rem}
+.form-control{width:100%;padding:13px 15px;border:1.5px solid var(--border-color);border-radius:8px;font-size:.95rem;outline:none;background:#fafbfc}
+.form-control:focus{border-color:var(--primary-color);background:white}
+.btn{display:inline-flex;justify-content:center;align-items:center;width:100%;padding:14px;background:var(--primary-color);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 4px 12px rgba(12,56,102,.15)}
+.btn:hover{background:var(--primary-hover);transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn-secondary{background:#e2e8f0;color:var(--text-main);box-shadow:none}
+.btn-secondary:hover{background:#cbd5e1}
+.btn-outline{background:white;border:1.5px solid var(--border-color);color:var(--text-main);box-shadow:none}
+.btn-success{background:var(--success-color)}
+.btn-success:hover{background:#236327}
+.options-group{display:flex;gap:16px;margin:20px 0}
+.opt-btn{flex:1;padding:15px;border:2px solid var(--border-color);background:white;border-radius:10px;cursor:pointer;font-weight:700;font-size:1.05rem;text-align:center;color:var(--text-main)}
+.opt-btn:hover{border-color:var(--primary-color);background:#f8fafc}
+.opt-btn.selected-yes{border-color:var(--success-color);background:#e8f5e9;color:var(--success-color)}
+.opt-btn.selected-no{border-color:var(--secondary-color);background:#ffebee;color:var(--secondary-color)}
+.sub-question{margin-top:20px;padding:20px;background:#f8fafc;border-radius:10px;border-right:4px solid var(--primary-color);border:1px solid #edf2f7;display:none}
+.nav-buttons{display:flex;justify-content:space-between;gap:15px;margin-top:25px}
+.nav-buttons .btn{flex:1}
+.modal-overlay{position:fixed;inset:0;width:100%;height:100%;background:rgba(12,30,50,.65);backdrop-filter:blur(3px);display:none;justify-content:center;align-items:center;z-index:1000;padding:18px}
+.modal-card{background:white;width:100%;max-width:520px;border-radius:var(--radius);padding:28px;box-shadow:0 20px 40px rgba(0,0,0,.25);position:relative;animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(-10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close-icon{position:absolute;top:18px;left:18px;font-size:1.4rem;cursor:pointer;color:#94a3b8}
+.modal-header{color:var(--secondary-color);font-size:1.15rem;font-weight:800;margin-bottom:14px}
+.modal-body{font-size:.98rem;margin-bottom:24px;color:#334155;line-height:1.8}
+.modal-actions{display:flex;flex-direction:column;gap:10px}
+.result-badge{display:inline-block;padding:9px 20px;border-radius:30px;color:white;font-weight:800;font-size:.95rem;margin-bottom:18px}
+.bg-red{background:var(--secondary-color)}
+.bg-yellow{background:var(--warning-color)}
+.bg-green{background:var(--success-color)}
+@media(max-width:560px){
+.step-content{padding:24px 18px}
+.options-group{gap:8px}
+.opt-btn{padding:12px 8px;font-size:.95rem}
+.nav-buttons{gap:8px}
+.nav-buttons .btn{padding:12px 8px;font-size:.9rem}
+.stats-bar{gap:8px;padding:12px}
+.stat-item strong{font-size:1rem}
+.stat-item span{font-size:.75rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<img src="Picture1.png" alt="لوگوی عدل گستر" class="logo-img">
+<h1>مرکز تخصصی مشاوره روابط کار و تأمین اجتماعی عدل‌گستر</h1>
+<p>سامانه هوشمند عارضه‌یابی و ارزیابی ریسک‌های حقوقی و پرسنلی کارگاه‌ها</p>
+</div>
+
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="step-content active" id="step1">
+<h2 style="font-size:1.25rem;margin-bottom:12px;color:var(--primary-color)">پرونده پرسنلی کارگاه شما، چقدر در برابر جریمه و دعوی ایمن است؟</h2>
+<p style="font-size:.95rem;color:var(--text-muted)">در کمتر از ۵ دقیقه، وضعیت اسناد و روابط کار مجموعه خود را ارزیابی کرده و کارنامه ریسک اختصاصی دریافت کنید.</p>
+<div class="features-grid">
+<div class="feature-card"><strong>۱. قانون کار و قراردادها:</strong> بررسی صحت و شمولیت اسناد کتبی</div>
+<div class="feature-card"><strong>۲. محاسبات مزایا و فیش حقوقی:</strong> تطابق حداقل قانونی و رسید بانکی</div>
+<div class="feature-card"><strong>۳. لیست بیمه و دستمزد بیمه‌ای پرسنل:</strong> عناوین شغلی و دستمزد مقطوع صنف</div>
+<div class="feature-card"><strong>۴. تعهدات و اسناد ضمانت:</strong> محرمانگی، سفته و شرایط استرداد</div>
+<div class="feature-card"><strong>۵. آیین‌نامه انضباطی و قطع همکاری:</strong> اخطار کتبی و تسویه‌حساب قانونی</div>
+<div class="feature-card"><strong>۶. تسویه‌حساب و مرخصی:</strong> عیدی، سنوات و مفاصاحساب رسمی</div>
+<div class="feature-card"><strong>۷. جرایم تأمین اجتماعی و دعاوی اداره کار:</strong> ممیزی و دفاع در پرونده‌های جاری</div>
+</div>
+<div class="stats-bar">
+<div class="stat-item"><strong>۱۴+ سال</strong><span>سابقه تخصصی</span></div>
+<div class="stat-item"><strong>۴,۰۰۰+</strong><span>پرونده موفق</span></div>
+<div class="stat-item"><strong>۵۰۰+</strong><span>شرکت طرف قرارداد</span></div>
+</div>
+<button class="btn" onclick="goToStep(2)">شروع ارزیابی هوشمند کارگاه ←</button>
+</div>
+
+<div class="step-content" id="step2">
+<h2 style="font-size:1.15rem;margin-bottom:18px;color:var(--primary-color)">گام ۱ از ۳ | پروفایل پایه کسب‌وکار</h2>
+<div class="form-group"><label>نام کارگاه / برند تجاری:</label><input type="text" id="bizName" class="form-control" placeholder="مثلاً: مجموعه صنعتی الف"></div>
+<div class="form-group"><label>صنف / حوزه فعالیت:</label>
+<select id="bizCategory" class="form-control">
+<option value="تولیدی و صنعتی">تولیدی و صنعتی</option>
+<option value="صنایع غذایی و رستوران">صنایع غذایی و رستوران</option>
+<option value="خدماتی و بازرگانی">خدماتی و بازرگانی</option>
+<option value="درمانگاه و پزشکی">درمانگاه و پزشکی</option>
+<option value="فنی و مهندسی">فنی و مهندسی</option>
+<option value="IT و استارت‌آپ">IT و استارت‌آپ</option>
+<option value="سایر">سایر موارد</option>
+</select></div>
+<div class="form-group"><label>تعداد کل پرسنل شاغل:</label><input type="number" id="bizStaff" class="form-control" placeholder="مثلاً: ۱۵"></div>
+<div class="form-group"><label>شهر محل فعالیت:</label><input type="text" id="bizCity" class="form-control" placeholder="مثلاً: تهران"></div>
+<div class="nav-buttons">
+<button class="btn btn-secondary" onclick="goToStep(1)">← بازگشت</button>
+<button class="btn" onclick="validateStep2()">ورود به سوالات ارزیابی تخصصی ←</button>
+</div>
+</div>
+
+<div class="step-content" id="step3">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+<h2 style="font-size:1.15rem;color:var(--primary-color)" id="qTitle">سوال ۱ از ۷</h2>
+</div>
+<p id="qText" style="font-size:1.05rem;font-weight:700;margin-bottom:22px;line-height:1.8"></p>
+<div class="options-group">
+<button class="opt-btn" id="btnYes" onclick="handleAnswer(true)">بله</button>
+<button class="opt-btn" id="btnNo" onclick="handleAnswer(false)">خیر</button>
+</div>
+<div class="sub-question" id="subQBox">
+<p id="subQText" style="font-size:.95rem;font-weight:700;margin-bottom:12px;color:var(--primary-color)"></p>
+<div class="options-group">
+<button class="opt-btn" onclick="handleSubAnswer(true)">بله (شخصی‌سازی شده / استاندارد)</button>
+<button class="opt-btn" onclick="handleSubAnswer(false)">خیر (فرم خام / عمومی)</button>
+</div>
+</div>
+<div class="nav-buttons">
+<button class="btn btn-secondary" id="prevQBtn" onclick="prevQuestion()">← سوال قبل</button>
+</div>
+</div>
+
+<div class="step-content" id="step4">
+<h2 style="font-size:1.2rem;margin-bottom:12px;color:var(--primary-color)">کارنامه آنالیز هوشمند ریسک کارگاه</h2>
+<div id="resultBadgeBox" class="result-badge bg-red">سطح ریسک: قرمز (بحرانی)</div>
+<p id="resultSummaryText" style="font-size:.95rem;margin-bottom:22px;line-height:1.8"></p>
+<div style="background:#fff9e6;border-right:4px solid var(--accent-color);padding:18px;border-radius:10px;margin-bottom:22px">
+<strong style="color:#855b00;display:block;margin-bottom:6px">🎁 پیشنهاد ویژه عدل‌گستر:</strong>
+<p style="font-size:.92rem;color:#423100">جهت بررسی مدارک و دریافت راهکارهای حقوقی رفع ریسک‌های شناسایی‌شده، می‌توانید همین حالا یک جلسه رایگان تحلیل پرونده با مشاوران ارشد عدل‌گستر هماهنگ کنید.</p>
+</div>
+<div class="form-group"><label>نام و نام خانوادگی کارفرما / مدیر:</label><input type="text" id="leadName" class="form-control" placeholder="مثلاً: علی محمدی"></div>
+<div class="form-group"><label>شماره همراه جهت هماهنگی جلسه (الزامی):</label><input type="tel" id="leadPhone" class="form-control" placeholder="۰۹۱۲XXXXXXX"></div>
+<div class="nav-buttons">
+<button class="btn btn-secondary" id="backAssessmentBtn" onclick="editQuestions()">← ویرایش سوالات</button>
+<button class="btn btn-success" id="submitLeadBtn" onclick="submitLead()">ثبت نهایی و رزرو جلسه مشاوره ←</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal-card">
+<span class="modal-close-icon" onclick="closeModalOnly()">&times;</span>
+<div class="modal-header" id="modalTitle">🚨 ریسک شدید قانون کار!</div>
+<div class="modal-body" id="modalBody"></div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeModalAndContinue()">ادامه ارزیابی به سوال بعد (بدون رزرو) ←</button>
+<button class="btn" id="modalCtaBtn" style="background-color:var(--accent-color);color:#1e1b4b" onclick="modalBookConsultation()">📞 رزرو جلسه مشاوره اختصاصی</button>
+</div>
+</div>
+</div>
+
+<script>
+let currentStep=1;
+let currentQIndex=0;
+let userAnswers=[];
+let consultationOnly=false;
+
+const questions=[
+{
+title:"سوال ۱: وضعیت قراردادها",
+text:"آیا تمامی پرسنل (تمام‌وقت، پاره‌وقت، پروژه‌ای) دارای قرارداد کتبی معتبر هستند؟",
+subText:"آیا قراردادها بر اساس وظایف اختصاصی هر نیرو شخصی‌سازی شده‌اند؟",
+noWarnTitle:"🚨 ریسک شدید قانون کار!",
+noWarnText:"عدم وجود قرارداد کتبی می‌تواند زمینه‌ساز اختلاف و ادعاهای حقوقی در اداره کار شود.",
+subNoWarnTitle:"⚠️ بی‌اعتباری فرم‌های عمومی!",
+subNoWarnText:"فرم‌های عمومی ممکن است پاسخ‌گوی شرایط اختصاصی کارگاه نباشند و نیاز به بررسی و اصلاح داشته باشند.",
+ctaText:"مشاوره تنظیم و ایمن‌سازی قراردادها"
+},
+{
+title:"سوال ۲: حقوق و فیش حقوقی",
+text:"آیا حقوق طبق قوانین اداره کار پرداخت و فیش حقوقی با امضا/رسید بانکی بایگانی می‌گردد؟",
+subText:"آیا رسید واریز بانکی با مفاد فیش حقوقی و ساعات کارکرد واقعی مطابقت کامل دارد؟",
+noWarnTitle:"🚨 ریسک اختلاف در اداره کار!",
+noWarnText:"نبود اسناد پرداخت و فیش‌های حقوقی منظم می‌تواند اثبات پرداخت‌ها را دشوار کند.",
+subNoWarnTitle:"⚠️ خطر ادعای مجدد معوقات!",
+subNoWarnText:"عدم انطباق واریزی بانکی با فیش حقوقی ممکن است زمینه‌ساز اختلاف درباره پرداخت‌ها شود.",
+ctaText:"مشاوره تخصصی حقوق و دستمزد"
+},
+{
+title:"سوال ۳: بیمه تأمین اجتماعی",
+text:"آیا همه پرسنل از روز اول بیمه شده و لیست بر اساس عناوین شغلی واقعی ارسال می‌شود؟",
+subText:"آیا دستمزد مبنای کسر حق بیمه با دستمزد مقطوع صنف و بازرسی‌های تأمین اجتماعی مطابقت دارد؟",
+noWarnTitle:"🚨 ریسک مغایرت بیمه‌ای!",
+noWarnText:"مغایرت در بیمه و فهرست کارکنان می‌تواند منجر به مطالبه بدهی و اختلاف با تأمین اجتماعی شود.",
+subNoWarnTitle:"⚠️ خطر جریمه مابه‌التفاوت بیمه!",
+subNoWarnText:"دستمزد بیمه‌ای نامتناسب با مقررات و شرایط مربوط ممکن است نیازمند بررسی و اصلاح باشد.",
+ctaText:"مشاوره تخصصی تأمین اجتماعی"
+},
+{
+title:"سوال ۴: تعهدات، محرمانگی و تضامین",
+text:"آیا تعهدنامه محرمانگی، حفظ اسناد و تعهدات شغلی از پرسنل اخذ شده است؟",
+subText:"آیا بابت سفته/چک ضمانت، شماره سند در متن قرارداد درج شده و بابت ضمانت قید شده است؟",
+noWarnTitle:"🚨 خطر اختلاف بر سر محرمانگی!",
+noWarnText:"نبود تعهدات کتبی ممکن است پیگیری اختلافات مرتبط با اطلاعات و خسارات شغلی را دشوار کند.",
+subNoWarnTitle:"⚠️ خطر اختلاف بر سر اسناد ضمانت!",
+subNoWarnText:"مشخصات و هدف اسناد ضمانت باید به‌صورت روشن و مستند مشخص باشند.",
+ctaText:"مشاوره تنظیم تعهدنامه و اسناد ضمانت"
+},
+{
+title:"سوال ۵: آیین‌نامه انضباطی و قطع همکاری",
+text:"آیا قطع همکاری با پرسنل متخلف، مستند به آیین‌نامه انضباطی و تذکر کتبی قبلی است؟",
+subText:"آیا آیین‌نامه انضباطی کارگاه به تایید اداره کار رسیده یا رسماً ابلاغ شده است؟",
+noWarnTitle:"🚨 ریسک اختلاف بر سر قطع همکاری!",
+noWarnText:"قطع همکاری بدون مستندسازی مناسب و رعایت الزامات قانونی می‌تواند منجر به اختلاف در اداره کار شود.",
+subNoWarnTitle:"⚠️ اعتبار آیین‌نامه انضباطی!",
+subNoWarnText:"قابلیت استناد به آیین‌نامه به رعایت الزامات قانونی و شرایط مربوط بستگی دارد.",
+ctaText:"مشاوره تدوین آیین‌نامه انضباطی"
+},
+{
+title:"سوال ۶: تسویه‌حساب و مرخصی",
+text:"آیا تسویه‌حساب مزایای پایان سال و همکاری (عیدی، پاداش، حق سنوات و مرخصی) به‌صورت سالانه با فرم استاندارد انجام می‌گیرد؟",
+subText:"آیا برگه تسویه‌حساب متضمن اقرار صریح صلح و واریز بانکی مستند است؟",
+noWarnTitle:"⚠️ ریسک اختلاف در محاسبه سنوات!",
+noWarnText:"تسویه‌حساب غیراصولی یا ناقص ممکن است زمینه‌ساز اختلاف درباره مطالبات پایان همکاری شود.",
+subNoWarnTitle:"⚠️ خطر اختلاف بر سر تسویه‌حساب!",
+subNoWarnText:"مدارک پرداخت و مستندات مناسب در اثبات تسویه‌حساب اهمیت دارند.",
+ctaText:"مشاوره تسویه‌حساب قانونی"
+},
+{
+title:"سوال ۷: سوابق دعاوی و شکایات",
+text:"آیا هم‌اکنون یا در یک سال گذشته، سابقه شکایت کارگری یا اخطاریه بیمه‌ای داشته‌اید؟",
+subText:"آیا پرونده هم‌اکنون در مرحله بدوی، تجدیدنظر یا اجرا فعال است؟",
+noWarnTitle:"💡 فرصت پیشگیری!",
+noWarnText:"نبود پرونده فعال می‌تواند فرصت مناسبی برای ممیزی اسناد و پیشگیری از اختلافات آینده باشد.",
+subNoWarnTitle:"🚨 اهمیت رسیدگی به پرونده فعال!",
+subNoWarnText:"پرونده‌های فعال ممکن است به بررسی فوری مستندات و مشاوره تخصصی نیاز داشته باشند.",
+ctaText:"درخواست دفاع تخصصی در اداره کار"
+}
+];
+
+function goToStep(step){
+document.querySelectorAll(".step-content").forEach(el=>el.classList.remove("active"));
+document.getElementById("step"+step).classList.add("active");
+currentStep=step;
+document.getElementById("progressBar").style.width=(step/4*100)+"%";
+if(step===3)loadQuestion(currentQIndex);
+}
+
+function validateStep2(){
+const name=document.getElementById("bizName").value.trim();
+const staff=document.getElementById("bizStaff").value.trim();
+const city=document.getElementById("bizCity").value.trim();
+if(!name||!staff||!city){
+alert("لطفاً نام کارگاه، تعداد پرسنل و شهر محل فعالیت را تکمیل کنید.");
+return;
+}
+consultationOnly=false;
+currentQIndex=0;
+goToStep(3);
+}
+
+function loadQuestion(index){
+currentQIndex=index;
+const q=questions[index];
+document.getElementById("qTitle").innerText="سوال "+(index+1)+" از ۷";
+document.getElementById("qText").innerText=q.text;
+document.getElementById("subQBox").style.display="none";
+document.getElementById("prevQBtn").innerText=index===0?"← بازگشت به پروفایل":"← سوال قبل";
+document.getElementById("btnYes").className="opt-btn";
+document.getElementById("btnNo").className="opt-btn";
+
+if(userAnswers[index]==="yes_main"||userAnswers[index]==="yes_full"){
+document.getElementById("btnYes").className="opt-btn selected-yes";
+}else if(userAnswers[index]==="no"||userAnswers[index]==="sub_no"){
+document.getElementById("btnNo").className="opt-btn selected-no";
+}
+}
+
+function prevQuestion(){
+if(currentQIndex>0){
+loadQuestion(currentQIndex-1);
+}else{
+goToStep(2);
+}
+}
+
+function handleAnswer(isYes){
+const q=questions[currentQIndex];
+
+if(currentQIndex===6){
+if(isYes){
+userAnswers[currentQIndex]="yes_main";
+showModal("🚨 اهمیت رسیدگی به پرونده فعال!",q.subNoWarnText,q.ctaText);
+}else{
+userAnswers[currentQIndex]="no";
+nextQuestion();
+}
+return;
+}
+
+if(isYes){
+userAnswers[currentQIndex]="yes_main";
+document.getElementById("subQText").innerText=q.subText;
+document.getElementById("subQBox").style.display="block";
+}else{
+userAnswers[currentQIndex]="no";
+showModal(q.noWarnTitle,q.noWarnText,q.ctaText);
+}
+}
+
+function handleSubAnswer(isCustomized){
+if(isCustomized){
+userAnswers[currentQIndex]="yes_full";
+nextQuestion();
+}else{
+userAnswers[currentQIndex]="sub_no";
+const q=questions[currentQIndex];
+showModal(q.subNoWarnTitle,q.subNoWarnText,q.ctaText);
+}
+}
+
+function showModal(title,text,cta){
+document.getElementById("modalTitle").innerText=title;
+document.getElementById("modalBody").innerText=text;
+document.getElementById("modalCtaBtn").innerText="📞 "+cta;
+document.getElementById("modalOverlay").style.display="flex";
+}
+
+function closeModalOnly(){
+document.getElementById("modalOverlay").style.display="none";
+}
+
+function closeModalAndContinue(){
+closeModalOnly();
+nextQuestion();
+}
+
+/* ورود مستقیم به صفحه رزرو مشاوره */
+function modalBookConsultation(){
+closeModalOnly();
+consultationOnly=true;
+
+document.getElementById("resultBadgeBox").className="result-badge bg-yellow";
+document.getElementById("resultBadgeBox").innerText="درخواست مشاوره تخصصی";
+document.getElementById("resultSummaryText").innerText=
+"برای هماهنگی جلسه مشاوره، نام و شماره همراه خود را وارد کنید. برای ثبت درخواست مشاوره، تکمیل همه سؤال‌ها الزامی نیست.";
+
+/* نمایش دکمه بازگشت به ادامه ارزیابی */
+const backButton=document.getElementById("backAssessmentBtn");
+backButton.style.display="";
+backButton.innerText="← مرحله قبل / ادامه ارزیابی";
+backButton.onclick=returnToAssessment;
+
+goToStep(4);
+}
+
+/* بازگشت به اولین سؤال بی‌پاسخ با حفظ جواب‌های قبلی */
+function returnToAssessment(){
+consultationOnly=false;
+
+const backButton=document.getElementById("backAssessmentBtn");
+backButton.innerText="← ویرایش سوالات";
+backButton.onclick=editQuestions;
+backButton.style.display="";
+
+/* پیدا کردن اولین سؤال بی‌پاسخ */
+const firstUnanswered=userAnswers.findIndex((answer,index)=>{
+return !answer && index<questions.length;
+});
+
+if(firstUnanswered!==-1){
+currentQIndex=firstUnanswered;
+goToStep(3);
+}else{
+/* اگر همه سؤال‌ها پاسخ داده شده‌اند، نتیجه واقعی نمایش داده شود */
+renderResults();
+goToStep(4);
+}
+}
+
+function editQuestions(){
+consultationOnly=false;
+const backButton=document.getElementById("backAssessmentBtn");
+backButton.style.display="";
+backButton.innerText="← ویرایش سوالات";
+backButton.onclick=editQuestions;
+currentQIndex=0;
+goToStep(3);
+}
+
+function nextQuestion(){
+if(currentQIndex<questions.length-1){
+loadQuestion(currentQIndex+1);
+}else{
+renderResults();
+consultationOnly=false;
+goToStep(4);
+}
+}
+
+function renderResults(){
+const badge=document.getElementById("resultBadgeBox");
+const summary=document.getElementById("resultSummaryText");
+let highRisk=0,medRisk=0;
+
+userAnswers.forEach(ans=>{
+if(ans==="no")highRisk++;
+if(ans==="sub_no")medRisk++;
+});
+
+if(highRisk>=2){
+badge.className="result-badge bg-red";
+badge.innerText="سطح ریسک کل کارگاه: قرمز (بحرانی)";
+summary.innerText="بر اساس پاسخ‌های ثبت‌شده، "+highRisk+" مورد پاسخ منفی و "+medRisk+" مورد نیازمند بررسی تکمیلی شناسایی شد.";
+}else if(highRisk>0||medRisk>1){
+badge.className="result-badge bg-yellow";
+badge.innerText="سطح ریسک کل کارگاه: زرد (نیازمند اصلاح)";
+summary.innerText="بر اساس پاسخ‌های ثبت‌شده، "+(highRisk+medRisk)+" مورد نیازمند بررسی یا اصلاح شناسایی شد.";
+}else{
+badge.className="result-badge bg-green";
+badge.innerText="سطح ریسک کل کارگاه: سبز (مناسب)";
+summary.innerText="وضعیت عمومی اسناد بر اساس پاسخ‌های ثبت‌شده مناسب ارزیابی شد؛ ممیزی دوره‌ای اسناد پیشنهاد می‌شود.";
+}
+
+const backButton=document.getElementById("backAssessmentBtn");
+backButton.style.display="";
+backButton.innerText="← ویرایش سوالات";
+backButton.onclick=editQuestions;
+}
+
+async function submitLead(){
+const submitButton=document.getElementById("submitLeadBtn");
+
+const getValue=id=>{
+const el=document.getElementById(id);
+return el?el.value.trim():"";
+};
+
+const normalizeDigits=value=>String(value).replace(/[۰-۹٠-٩]/g,ch=>{
+const fa="۰".charCodeAt(0);
+const ar="٠".charCodeAt(0);
+const code=ch.charCodeAt(0);
+if(code>=fa&&code<=fa+9)return String(code-fa);
+if(code>=ar&&code<=ar+9)return String(code-ar);
+return ch;
+});
+
+const name=getValue("leadName");
+const phone=normalizeDigits(getValue("leadPhone")).replace(/[\s-]/g,"");
+const bizName=getValue("bizName");
+const bizCategory=getValue("bizCategory");
+const bizStaff=normalizeDigits(getValue("bizStaff"));
+const bizCity=getValue("bizCity");
+
+if(!bizName||!bizStaff||!bizCity){
+alert("لطفاً نام کارگاه، تعداد پرسنل و شهر محل فعالیت را در صفحه قبل تکمیل کنید.");
+return;
+}
+
+if(!name){
+alert("لطفاً نام و نام خانوادگی کارفرما یا مدیر را وارد کنید.");
+return;
+}
+
+if(!/^09\d{9}$/.test(phone)){
+alert("لطفاً شماره همراه معتبر ۱۱ رقمی وارد کنید؛ مانند 09121234567.");
+return;
+}
+
+const completeAssessment=
+userAnswers.length===questions.length&&userAnswers.every(Boolean);
+
+if(!completeAssessment&&!consultationOnly){
+alert("لطفاً همه سؤال‌های ارزیابی را پاسخ دهید یا از گزینه مشاوره تخصصی استفاده کنید.");
+return;
+}
+
+if(submitButton.disabled)return;
+
+const answersForSheet=questions.map((q,i)=>userAnswers[i]||"");
+let highRisk=0,medRisk=0;
+
+answersForSheet.forEach(a=>{
+if(a==="no")highRisk++;
+if(a==="sub_no")medRisk++;
+});
+
+let riskLevel;
+
+if(!completeAssessment){
+riskLevel="درخواست مشاوره مستقیم - ارزیابی تکمیل نشده";
+}else if(highRisk>=2){
+riskLevel="قرمز - بحرانی";
+}else if(highRisk>0||medRisk>1){
+riskLevel="زرد - نیازمند اصلاح";
+}else{
+riskLevel="سبز - مناسب بر اساس پاسخ‌ها";
+}
+
+const payload={
+timestamp:new Date().toISOString(),
+bizName:bizName,
+bizCategory:bizCategory,
+bizStaff:bizStaff,
+bizCity:bizCity,
+leadName:name,
+leadPhone:phone,
+answers:answersForSheet,
+highRiskCount:highRisk,
+mediumRiskCount:medRisk,
+riskLevel:riskLevel,
+source:completeAssessment
+?"فرم عارضه‌یابی عدل‌گستر"
+:"درخواست مستقیم مشاوره عدل‌گستر"
+};
+
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbx1isEWLGhBWE32B9s5A9wg_0TMk2XsS3sGOYfawRUPSOln7BMJxS70cc8c7paIsUc/exec";
+
+try{
+submitButton.disabled=true;
+submitButton.textContent="در حال ارسال اطلاعات...";
+
+await fetch(SCRIPT_URL,{
+method:"POST",
+mode:"no-cors",
+headers:{"Content-Type":"text/plain;charset=utf-8"},
+body:JSON.stringify(payload)
+});
+
+alert("درخواست ارسال شد. لطفاً گوگل‌شیت را بررسی کنید تا مطمئن شوید ردیف جدید ثبت شده است.");
+
+}catch(error){
+console.error("خطا در ارسال اطلاعات:",error);
+alert("ارسال اطلاعات با خطا مواجه شد. اتصال اینترنت و آدرس اسکریپت را بررسی کنید.");
+}finally{
+submitButton.disabled=false;
+submitButton.textContent="ثبت نهایی و رزرو جلسه مشاوره ←";
+}
+}
+</script>
+</body>
+</html>
